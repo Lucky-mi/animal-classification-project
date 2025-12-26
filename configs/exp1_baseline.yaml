@@ -1,0 +1,68 @@
+# 实验1: ResNet-18 基线模型
+# 目的: 建立性能基准
+
+# 数据集配置
+data:
+  root_dir: "../Animals-10"
+  csv_file: "train_test_val_split.csv"
+  image_size: 224
+  num_classes: 10
+  classes:
+    - butterfly
+    - cat
+    - chicken
+    - cow
+    - dog
+    - elephant
+    - horse
+    - sheep
+    - spider
+    - squirrel
+
+# 训练配置
+training:
+  batch_size: 32
+  num_epochs: 30
+  num_workers: 4
+  pin_memory: true
+  
+  optimizer:
+    type: "AdamW"
+    lr: 0.001
+    weight_decay: 0.0001
+  
+  scheduler:
+    type: "CosineAnnealingLR"
+    T_max: 30
+    eta_min: 0.00001
+
+# 模型配置
+model:
+  name: "resnet18"
+  pretrained: true
+  dropout: 0.3
+
+# 数据增强 - 基础增强
+use_augmentation: "basic"
+
+# 损失函数 - 标准交叉熵
+loss:
+  type: "ce"
+
+# MixUp - 不使用
+use_mixup: false
+
+# 输出配置
+output:
+  root_dir: "../outputs"
+  save_best_only: true
+  save_frequency: 5
+
+# 设备和随机种子
+device: "cuda"
+seed: 42
+
+# 日志
+logging:
+  use_tensorboard: true
+  log_interval: 10
