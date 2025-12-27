@@ -9,7 +9,12 @@
 
 import os
 import sys
-sys.path.append('..')
+
+# 切换到project目录，确保相对路径正确
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = os.path.dirname(script_dir)
+os.chdir(project_dir)
+sys.path.append(project_dir)
 
 import argparse
 import subprocess
@@ -38,7 +43,7 @@ def run_experiment(config_path: str, model_name: str) -> dict:
     start_time = time.time()
 
     # 运行训练
-    cmd = f"python ../main.py --config {config_path}"
+    cmd = f"python main.py --config {config_path}"
     result = subprocess.run(cmd, shell=True)
 
     end_time = time.time()
@@ -66,9 +71,9 @@ def main(args):
 
     # 模型配置
     model_configs = {
-        'resnet18': '../configs/exp1_baseline.yaml',
-        'mobilenet_v2': '../configs/exp1_mobilenet.yaml',
-        'deit_tiny': '../configs/exp1_deit.yaml'
+        'resnet18': 'configs/exp1_baseline.yaml',
+        'mobilenet_v2': 'configs/exp1_mobilenet.yaml',
+        'deit_tiny': 'configs/exp1_deit.yaml'
     }
 
     # 筛选要运行的模型
@@ -96,7 +101,7 @@ def main(args):
         print(f"状态: {'成功' if result['success'] else '失败'}")
 
     # 生成汇总报告
-    output_dir = '../outputs/exp1_comparison'
+    output_dir = 'outputs/exp1_comparison'
     os.makedirs(output_dir, exist_ok=True)
 
     # 保存结果
@@ -141,8 +146,8 @@ def main(args):
     print("1. 评估模型:")
     for model_name, config_path in model_configs.items():
         exp_name = os.path.splitext(os.path.basename(config_path))[0]
-        checkpoint = f"../outputs/{exp_name}/models/best_model.pth"
-        print(f"   python ../evaluate.py --checkpoint {checkpoint} --config {config_path}")
+        checkpoint = f"outputs/{exp_name}/models/best_model.pth"
+        print(f"   python evaluate.py --checkpoint {checkpoint} --config {config_path}")
     print()
 
 

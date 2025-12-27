@@ -89,9 +89,21 @@ def main(args):
     # 打印结果
     evaluator.print_results(results)
     
-    # 创建输出目录
-    exp_name = os.path.splitext(os.path.basename(args.config))[0]
+ # 创建输出目录
+    # 优先从checkpoint路径推断exp_name: ../outputs/exp_name/models/best_model.pth
+    checkpoint_abs = os.path.abspath(args.checkpoint)
+    checkpoint_dir = os.path.dirname(os.path.dirname(checkpoint_abs))
+    exp_name = os.path.basename(checkpoint_dir)
+
+      # 如果推断失败，尝试从配置文件读取或使用配置文件名
+    if exp_name in ['outputs', '..', '', 'project']:
+        if 'exp_name' in config:
+            exp_name = config['exp_name']
+        else:
+            exp_name = os.path.splitext(os.path.basename(args.config))[0]
+
     output_dir = os.path.join('../outputs', exp_name, 'evaluation')
+    print(f"📁 输出目录: {output_dir}")
     os.makedirs(output_dir, exist_ok=True)
     
     # 保存混淆矩阵

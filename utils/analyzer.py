@@ -7,10 +7,38 @@
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 from typing import Dict, List, Tuple
 import os
 from collections import defaultdict
 from PIL import Image
+
+# 配置中文字体支持
+def setup_chinese_font():
+    """设置matplotlib中文字体"""
+    import platform
+    system = platform.system()
+
+    if system == 'Windows':
+        # Windows系统使用微软雅黑或黑体
+        font_list = ['Microsoft YaHei', 'SimHei', 'SimSun']
+    elif system == 'Darwin':
+        # macOS
+        font_list = ['Arial Unicode MS', 'PingFang SC', 'Heiti SC']
+    else:
+        # Linux
+        font_list = ['WenQuanYi Micro Hei', 'Noto Sans CJK SC', 'DejaVu Sans']
+
+    for font in font_list:
+        try:
+            matplotlib.rcParams['font.sans-serif'] = [font] + matplotlib.rcParams['font.sans-serif']
+            matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
+            break
+        except:
+            continue
+
+# 初始化时设置字体
+setup_chinese_font()
 
 
 class ErrorAnalyzer:

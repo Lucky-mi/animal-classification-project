@@ -1,0 +1,58 @@
+# 实验2.5: 类别不平衡 - Weighted Focal Loss (最佳方案)
+
+data:
+  root_dir: "../Animals-10"
+  csv_file: "train_test_val_split.csv"
+  image_size: 224
+  num_classes: 10
+  classes:
+    - butterfly
+    - cat
+    - chicken
+    - cow
+    - dog
+    - elephant
+    - horse
+    - sheep
+    - spider
+    - squirrel
+
+training:
+  batch_size: 32
+  num_epochs: 30
+  num_workers: 4
+  pin_memory: true
+
+  optimizer:
+    type: "AdamW"
+    lr: 0.001
+    weight_decay: 0.0001
+
+  scheduler:
+    type: "CosineAnnealingLR"
+    T_max: 30
+    eta_min: 0.00001
+
+model:
+  name: "resnet18"
+  pretrained: true
+  dropout: 0.3
+
+use_augmentation: "basic"
+
+loss:
+  type: "weighted_focal"
+
+use_mixup: false
+
+output:
+  root_dir: "../outputs"
+  save_best_only: true
+  save_frequency: 5
+
+device: "cuda"
+seed: 42
+
+logging:
+  use_tensorboard: true
+  log_interval: 10

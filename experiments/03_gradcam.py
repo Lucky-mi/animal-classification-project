@@ -8,7 +8,12 @@
 
 import os
 import sys
-sys.path.append('..')
+
+# 切换到project目录，确保相对路径正确
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = os.path.dirname(script_dir)
+os.chdir(project_dir)
+sys.path.append(project_dir)
 
 import torch
 import numpy as np
@@ -96,7 +101,7 @@ def main():
         
         # 随机选择一张
         sample = class_samples.sample(1).iloc[0]
-        img_path = os.path.join('../Animals-10', sample['filename'])
+        img_path = os.path.join('../Animals-10', sample['path'])
         
         if not os.path.exists(img_path):
             print(f"⚠️ 图像不存在: {img_path}")
@@ -106,9 +111,9 @@ def main():
         original_img = Image.open(img_path).convert('RGB')
         original_img_np = np.array(original_img)
         
-        # 预处理
-        img_tensor = transform(original_img).unsqueeze(0)
-        
+        # 预处理并移动到设备
+        img_tensor = transform(original_img).unsqueeze(0).to(device)
+
         # 生成Grad-CAM对比图
         save_path = os.path.join(output_dir, f'gradcam_{class_name}.png')
         

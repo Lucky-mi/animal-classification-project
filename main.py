@@ -30,7 +30,7 @@ def set_seed(seed: int = 42):
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-    print(f"🌱 随机种子设置为: {seed}")
+    print(f"[SEED] 随机种子设置为: {seed}")
 
 
 def load_config(config_path: str) -> dict:
@@ -45,7 +45,7 @@ def main(args):
     
     # 加载配置
     print(f"\n{'='*70}")
-    print(f"📁 加载配置文件: {args.config}")
+    print(f"[CONFIG] 加载配置文件: {args.config}")
     print(f"{'='*70}\n")
     
     config = load_config(args.config)
@@ -65,7 +65,7 @@ def main(args):
     
     # 设置设备
     device = config['device'] if torch.cuda.is_available() else 'cpu'
-    print(f"🖥️  使用设备: {device}")
+    print(f"[DEVICE] 使用设备: {device}")
     if device == 'cuda':
         print(f"   GPU: {torch.cuda.get_device_name(0)}")
         print(f"   显存: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.1f} GB")

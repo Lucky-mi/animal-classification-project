@@ -9,7 +9,12 @@
 
 import os
 import sys
-sys.path.append('..')
+
+# 切换到project目录，确保相对路径正确
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = os.path.dirname(script_dir)
+os.chdir(project_dir)
+sys.path.append(project_dir)
 
 import argparse
 import subprocess
@@ -40,7 +45,7 @@ def run_experiment(config_path: str, strategy_name: str, output_suffix: str = No
     start_time = time.time()
 
     # 运行训练
-    cmd = f"python ../main.py --config {config_path}"
+    cmd = f"python main.py --config {config_path}"
     result = subprocess.run(cmd, shell=True)
 
     end_time = time.time()
@@ -69,9 +74,9 @@ def main(args):
     # 增强策略配置
     # 按PDF要求: 无增强 -> 基础增强 -> 基础+MixUp
     strategy_configs = {
-        'none': '../configs/exp2_no_aug.yaml',           # 无增强
-        'basic': '../configs/exp2_augmentation.yaml',    # 基础增强
-        'basic_mixup': '../configs/exp2_mixup.yaml'      # 基础+MixUp
+        'none': 'configs/exp2_no_aug.yaml',           # 无增强
+        'basic': 'configs/exp2_augmentation.yaml',    # 基础增强
+        'basic_mixup': 'configs/exp2_mixup.yaml'      # 基础+MixUp
     }
 
     strategy_names = {
@@ -109,7 +114,7 @@ def main(args):
         print(f"状态: {'成功' if result['success'] else '失败'}")
 
     # 生成汇总报告
-    output_dir = '../outputs/exp2_ablation'
+    output_dir = 'outputs/exp2_ablation'
     os.makedirs(output_dir, exist_ok=True)
 
     # 保存结果
@@ -170,9 +175,9 @@ def main(args):
     for strategy_key in strategy_configs:
         exp_name = exp_names.get(strategy_key)
         if exp_name:
-            checkpoint = f"../outputs/{exp_name}/models/best_model.pth"
+            checkpoint = f"outputs/{exp_name}/models/best_model.pth"
             config = strategy_configs[strategy_key]
-            print(f"  python ../evaluate.py --checkpoint {checkpoint} --config {config}")
+            print(f"  python evaluate.py --checkpoint {checkpoint} --config {config}")
     print()
 
 

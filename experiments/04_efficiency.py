@@ -8,7 +8,12 @@
 
 import os
 import sys
-sys.path.append('..')
+
+# 切换到project目录，确保相对路径正确
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = os.path.dirname(script_dir)
+os.chdir(project_dir)
+sys.path.append(project_dir)
 
 import torch
 import time
